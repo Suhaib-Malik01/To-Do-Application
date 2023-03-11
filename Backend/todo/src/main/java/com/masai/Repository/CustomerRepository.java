@@ -1,0 +1,13 @@
+package com.masai.Repository;
+
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.masai.Bean.Customer;
+
+public interface CustomerRepository extends JpaRepository<Customer,Integer>{
+
+    Optional<Customer> findByEmail(String email);
+    
+}

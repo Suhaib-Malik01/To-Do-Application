@@ -30,6 +30,6 @@ public class Task {
     private LocalDateTime dueDate;
 
     @ManyToOne
-    private User user;
+    private Customer user;
     
 }
