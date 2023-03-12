@@ -18,18 +18,19 @@ public class SecurityConfig {
 
         http
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-        .csrf()
-        .disable()
-        .authorizeHttpRequests( (auth)->auth
-                .requestMatchers("/user").authenticated()
-				.requestMatchers(HttpMethod.POST, "/user/register").permitAll()
-		).addFilterAfter(new JwtTokenGeneratorFilter(), BasicAuthenticationFilter.class)
-        .addFilterBefore(new JwtTokenValidatorFilter(), BasicAuthenticationFilter.class)
-        .formLogin().and().httpBasic();
+		.and()
+		.csrf().disable()
+		.authorizeHttpRequests()
+		.requestMatchers(HttpMethod.POST, "/user/register").permitAll()
+		.anyRequest().authenticated().and()
+		.addFilterAfter(new JwtTokenGeneratorFilter(), BasicAuthenticationFilter.class)
+		.addFilterBefore(new JwtTokenValidatorFilter(), BasicAuthenticationFilter.class)
+		.formLogin()
+		.and()
+		.httpBasic();
 
 		return http.build();
-
+        
     }
     
     @Bean

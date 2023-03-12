@@ -1,11 +1,15 @@
 package com.masai.Config;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.crypto.SecretKey;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -30,6 +34,7 @@ public class JwtTokenGeneratorFilter extends OncePerRequestFilter {
             .setIssuer("Suhaib")
             .setSubject("Jwt Token")
             .claim("username", auth.getName())
+            .claim("authorities", generateAuthorities(auth.getAuthorities()))
             .setIssuedAt(new Date())
             .signWith(key).compact();
 
@@ -38,6 +43,17 @@ public class JwtTokenGeneratorFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private String generateAuthorities(Collection<? extends GrantedAuthority> collection) {
+        
+    	Set<String> authoritiesSet = new HashSet<>();
+        
+        for (GrantedAuthority authority : collection) {
+            authoritiesSet.add(authority.getAuthority());
+        }
+        return String.join(",", authoritiesSet);
+
     }
     
     @Override
